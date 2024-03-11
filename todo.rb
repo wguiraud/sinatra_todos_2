@@ -20,3 +20,7 @@ get "/lists" do
   erb :lists 
 end
 
+get "/lists/new" do 
+  session[:lists] << { name: "My first list", todos: [] }
+  redirect "/lists"
+end
