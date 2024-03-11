@@ -7,5 +7,5 @@ get "/" do
     { name: "groceries lunch"}, 
     { name: "groceries supper"}
   ]
-  erb :list 
+  erb :lists 
 end
