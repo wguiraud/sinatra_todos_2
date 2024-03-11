@@ -21,6 +21,5 @@ get "/lists" do
 end
 
 get "/lists/new" do 
-  session[:lists] << { name: "My first list", todos: [] }
-  redirect "/lists"
+  erb :new_list
 end
