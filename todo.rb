@@ -16,7 +16,7 @@ get "/" do
   redirect "/lists"
 end
 
-# view all lists
+# view all lists 
 get "/lists" do 
   @lists = session[:lists]
   erb :lists 
