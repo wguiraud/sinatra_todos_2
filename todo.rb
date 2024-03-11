@@ -3,7 +3,7 @@ require "sinatra/reloader"
 require "tilt/erubis"
 
 configure do 
-  enable: :sessions
+  enable :sessions
   set :session_secret, SecureRandom.hex(32)
 end
 
