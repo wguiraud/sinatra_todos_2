@@ -4,8 +4,8 @@ require "tilt/erubis"
 
 get "/" do
   @lists = [ 
-    { name: "groceries lunch"}, 
-    { name: "groceries supper"}
+    { name: "groceries lunch", todos: [] }, 
+    { name: "groceries supper", todos: [] }
   ]
   erb :lists 
 end
