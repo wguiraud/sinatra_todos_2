@@ -1,6 +1,7 @@
 require "sinatra"
 require "sinatra/reloader"
 require "tilt/erubis"
+require "pry"
 
 configure do 
   enable :sessions
@@ -23,3 +24,9 @@ end
 get "/lists/new" do 
   erb :new_list
 end
+
+post "/lists" do 
+  session[:lists] << { name: params[:list_name], todos: [] }
+  redirect "/lists"
+end
+
