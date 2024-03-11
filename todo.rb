@@ -7,6 +7,10 @@ configure do
   set :session_secret, SecureRandom.hex(32)
 end
 
+before do 
+  session[:lists] ||= []
+end
+
 get "/" do
   redirect "/lists"
 end
