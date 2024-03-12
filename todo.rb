@@ -29,8 +29,19 @@ end
 
 # create a new list
 post "/lists" do 
-  session[:lists] << { name: params[:list_name], todos: [] }
-  session[:success] = "The new lists has been created succesfully!"
-  redirect "/lists"
+  list_name = params[:list_name]
+
+  if valid_list_name?(list_name)
+    session[:lists] << { name: params[:list_name], todos: [] }
+    session[:success] = "The new lists has been created succesfully!"
+    redirect "/lists"
+  else
+    session[:error] = "Invalid list name. Please only use alphanumeric characters"
+    erb :new_list
+  end
+end
+
+def valid_list_name?(list_name)
+  list_name.match?(/^[\w ]{1,50}/i)
 end
 
