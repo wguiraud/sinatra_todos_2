@@ -42,6 +42,6 @@ post "/lists" do
 end
 
 def valid_list_name?(list_name)
-  list_name.match?(/^[\w ]{1,50}/i)
+  list_name.strip.match?(/^[\w ]{1,50}/i)
 end
 
