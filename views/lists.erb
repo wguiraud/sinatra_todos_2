@@ -1,3 +1,9 @@
+<% if session[:success] %> 
+  <div class="flash success">
+    <p><%= session.delete(:success) %></p>
+  </div>
+<% end %>
+
 <a href="/lists/new">Create a New List</a>
 <ul id="lists">
   <% @lists.each do |list| %>
