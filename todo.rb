@@ -32,7 +32,7 @@ post "/lists" do
   list_name = params[:list_name]
 
   if valid_list_name?(list_name)
-    session[:lists] << { name: params[:list_name], todos: [] }
+    session[:lists] << { name: list_name, todos: [] }
     session[:success] = "The new lists has been created succesfully!"
     redirect "/lists"
   else
@@ -42,6 +42,6 @@ post "/lists" do
 end
 
 def valid_list_name?(list_name)
-  list_name.strip.match?(/^[\w ]{1,50}/i)
+  list_name.strip.match?(/^[\w ]{1,50}$/i) #&& !list_name.include?("$")
 end
 
