@@ -31,22 +31,29 @@ end
 post "/lists" do 
   list_name = params[:list_name].strip #"sanitizing" the input string asap
 
-  if valid_list_name?(list_name)
-    session[:lists] << { name: list_name, todos: [] }
-    session[:success] = "The new lists has been created succesfully!"
-    redirect "/lists"
-  else
-    session[:error] = "Invalid or already used list name. Please only use alphanumeric characters"
+  error = error_for_list_name?(list_name)
+
+  if error  
+    session[:error] = error 
     erb :new_list
+  else
+    session[:lists] << { name: list_name, todos: [] }
+    session[:success] = "The new list has been created succesfully!"
+    redirect "/lists"
   end
 end
 
-def valid_list_name?(list_name)
-  list_name.match?(/^[\w ]{1,50}$/i) && unique_list_name?(list_name) 
+def error_for_list_name?(list_name)
+  return "List name must only include alphanumeric characters and must be between 1 and 50 characters long." if invalid_list_name?(list_name) 
+  return "List name must be unique" if already_used_list_name?(list_name)
 end
 
-def unique_list_name?(list_name)
-  !session[:lists].map { |list| list[:name] }.include?(list_name)
+def invalid_list_name?(list_name) 
+  !list_name.match?(/^[\w ]{1,50}$/i) 
+end
+
+def already_used_list_name?(list_name)
+  session[:lists].any? { |list| list[:name] == list_name }
 end
 
 
