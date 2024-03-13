@@ -59,17 +59,38 @@ end
 
 get "/lists/:id" do 
   list_id = params[:id].to_i
+  @list_id = params[:id]
   
   @list = session[:lists][list_id]
-
-  @list_id = params[:id]
 
   erb :list
 end
 
 get "/lists/:id/edit" do 
+  list_id = params[:id].to_i
+  @list_id = params[:id]
 
+  @list = session[:lists][list_id]
   erb :edit_list
 end
+
+post "/lists/:id" do 
+  current_list_name = params[:list_name].strip
+  list_id = params[:id].to_i
+  @list = session[:lists][list_id]
+  
+  error = error_for_list_name?(current_list_name)
+
+  if error
+    session[:error] = error
+    erb :edit_list
+
+  else
+    @list[:name] = current_list_name
+    session[:success] = "The list has been renamed successfully"
+    redirect "/lists/#{list_id}"
+  end
+end
+
 
 
