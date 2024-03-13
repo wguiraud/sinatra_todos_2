@@ -69,7 +69,7 @@ end
 
 get "/lists/:id/edit" do 
 
-  erb :new_list
+  erb :edit_list
 end
 
 
