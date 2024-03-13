@@ -1,4 +1,7 @@
-<a href="/lists/new">Create a New List</a>
+<% content_for :header_links do %> 
+  <a href="/lists/new">Create a New List</a>
+<% end %> 
+
 <ul id="lists">
   <% @lists.each_with_index do |list, id| %>
     <li>
