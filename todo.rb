@@ -56,4 +56,12 @@ def already_used_list_name?(list_name)
   session[:lists].any? { |list| list[:name] == list_name }
 end
 
+get "/lists/:id" do 
+  list_id = params[:id].to_i
+  
+  @list = session[:lists][list_id]
+
+  erb :list
+end
+
 
