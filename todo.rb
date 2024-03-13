@@ -62,7 +62,13 @@ get "/lists/:id" do
   
   @list = session[:lists][list_id]
 
+  @list_id = params[:id]
+
   erb :list
+end
+
+get "/lists/:id/edit" do 
+
 end
 
 
