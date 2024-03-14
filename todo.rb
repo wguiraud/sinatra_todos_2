@@ -93,7 +93,7 @@ post "/lists/:id" do
 end
 
 post "/lists/:id/delete" do 
-  "hello world"
+  "a new route that deletes the current list from the lists session hash"
 end
 
 
