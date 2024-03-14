@@ -93,7 +93,8 @@ post "/lists/:id" do
 end
 
 post "/lists/:id/delete" do 
-  session[:success] = "The list was deleted succesfully" if  session[:lists].delete_at(params[:id].to_i) 
+  id = params[:id].to_i
+  session[:success] = "The list was deleted succesfully" if  session[:lists].delete_at(id) 
   redirect "/lists"
 end
 
