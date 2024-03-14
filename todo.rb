@@ -93,7 +93,8 @@ post "/lists/:id" do
 end
 
 post "/lists/:id/delete" do 
-  "a new route that deletes the current list from the lists session hash"
+  session[:success] = "The list was deleted succesfully" if  session[:lists].delete_at(params[:id].to_i) 
+  redirect "/lists"
 end
 
 
