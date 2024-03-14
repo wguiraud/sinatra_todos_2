@@ -32,7 +32,7 @@ end
 post "/lists" do 
   list_name = params[:list_name].strip #"sanitizing" the input string asap
 
-  error = error_for_list_name?(list_name)
+  error = error_for_name?(list_name)
 
   if error  
     session[:error] = error 
@@ -44,7 +44,7 @@ post "/lists" do
   end
 end
 
-def error_for_list_name?(list_name)
+def error_for_name?(list_name)
   return "List name must only include alphanumeric characters and must be between 1 and 50 characters long." if invalid_list_name?(list_name) 
   return "List name must be unique" if already_used_list_name?(list_name)
 end
@@ -59,9 +59,9 @@ end
 
 get "/lists/:id" do 
   list_id = params[:id].to_i
-  @list_id = params[:id]
   
   @list = session[:lists][list_id]
+  @list_name = @list[:name]
 
   erb :list
 end
@@ -79,7 +79,7 @@ post "/lists/:id" do
   list_id = params[:id].to_i
   @list = session[:lists][list_id]
   
-  error = error_for_list_name?(current_list_name)
+  error = error_for_name?(current_list_name)
 
   if error
     session[:error] = error
@@ -98,9 +98,3 @@ post "/lists/:id/delete" do
   redirect "/lists"
 end
 
-post "/lists/:id/todos" do 
-  id = params[:id].to_i
-  session[:lists][id][:todos] << {name: params[:todo], completed: false }
-  session[:success] = "The todo has been added successfully"
-  redirect "/lists/#{id}"
-end
