@@ -98,6 +98,10 @@ post "/lists/:id/delete" do
   redirect "/lists"
 end
 
-
-
-
+post "/lists/:id/todos" do 
+  id = params[:id].to_i
+  @todo_name = params[:todo]
+  session[:lists][id][:todos] << {name: params[:todo], completed: false }
+  session[:success] = "The todo has been added successfully"
+  redirect "/lists/#{id}"
+end
