@@ -7,11 +7,15 @@
       </li>
     </ul>
   </header>
-</section>
 
-<% content_for :header_links do %>
-  <a href="/lists">All Lists</a>
-<% end %>
+    <ul> 
+      <% @list[:todos].each_with_index do |todo, idx| %>
+        <li>
+          <h3><%= todo[:name] %></h3>
+        </li>
+      <% end %>
+    </ul>
+</section>
 
 <form action="/lists/<%= params[:id] %>/todos" method="post">
   <dl>
@@ -26,3 +30,9 @@
     <input type="submit" value="Add">
   </fieldset>
 </form>
+
+<% content_for :header_links do %>
+  <a href="/lists">All Lists</a>
+<% end %>
+
+
