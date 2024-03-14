@@ -92,5 +92,10 @@ post "/lists/:id" do
   end
 end
 
+post "/lists/:id/delete" do 
+  "hello world"
+end
+
+
 
 
