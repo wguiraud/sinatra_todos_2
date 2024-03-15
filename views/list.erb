@@ -1,4 +1,3 @@
-<h3 class="list">TESTING STYLES</h3>
 <section id="todos">
   <header> 
     <h2><%= @list_name %></h2>
@@ -11,11 +10,23 @@
 
   <ul>
     <% @list[:todos].each_with_index do |todo, idx| %>
-      <li> 
+      <% if todo[:completed] %>
+        <li class="complete" >
+        <% else %>
+          <li> 
+        <% end %>
+
+        <form action="/lists/<%= @list_id %>/todos/<%= idx %>" method="post" class="check">
+          <input type="hidden" name="completed" value="<%= !todo[:completed] %>">
+          <button type="submit">Complete</button>
+        </form>
+
         <h3><%= todo[:name]  %></h3>
+
         <form action="/lists/<%= @list_id %>/todos/<%= idx %>/delete" method="post" class="delete">
           <button type="submit">Delete</button>
         </form>
+
       </li>
     <% end %>
   </ul>

@@ -61,6 +61,7 @@ def already_used_name?(list_name)
   session[:lists].any? { |list| list[:name] == list_name }
 end
 
+# display a list 
 get "/lists/:list_id" do 
   list_id = params[:list_id].to_i
   @list_id = params[:list_id] 
@@ -71,6 +72,7 @@ get "/lists/:list_id" do
   erb :list
 end
 
+# edit a list
 get "/lists/:list_id/edit" do 
   list_id = params[:list_id].to_i
   @list_id = params[:list_id]
@@ -79,6 +81,7 @@ get "/lists/:list_id/edit" do
   erb :edit_list
 end
 
+# rename an existing list
 post "/lists/:list_id" do 
   current_list_name = params[:list_name].strip
   list_id = params[:list_id].to_i
@@ -104,6 +107,7 @@ post "/lists/:list_id/delete" do
   redirect "/lists"
 end
 
+# add a new Todo to the list
 post "/lists/:list_id/todos" do 
   current_todo_name = params[:todo].strip
   list_id = params[:list_id].to_i
@@ -124,6 +128,7 @@ post "/lists/:list_id/todos" do
   end
 end
 
+# delete a Todo from the list
 post "/lists/:list_id/todos/:todo_id/delete" do 
   @list_id = params[:list_id].to_i
   @list = session[:lists][@list_id]
