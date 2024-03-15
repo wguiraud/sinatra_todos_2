@@ -61,27 +61,29 @@ def already_used_name?(list_name)
   session[:lists].any? { |list| list[:name] == list_name }
 end
 
-get "/lists/:id" do 
-  list_id = params[:id].to_i
+get "/lists/:list_id" do 
+  list_id = params[:list_id].to_i
+  @list_id = params[:list_id] 
   
   @list = session[:lists][list_id]
-  @list_name = @list[:name]
+  @list_name = session[:lists][list_id][:name] 
 
   erb :list
 end
 
-get "/lists/:id/edit" do 
-  list_id = params[:id].to_i
-  @list_id = params[:id]
+get "/lists/:list_id/edit" do 
+  list_id = params[:list_id].to_i
+  @list_id = params[:list_id]
 
   @list = session[:lists][list_id]
   erb :edit_list
 end
 
-post "/lists/:id" do 
+post "/lists/:list_id" do 
   current_list_name = params[:list_name].strip
-  list_id = params[:id].to_i
+  list_id = params[:list_id].to_i
   @list = session[:lists][list_id]
+  @list_id = params[:list_id]
   
   error = error_for_listname?(current_list_name)
 
@@ -96,15 +98,16 @@ post "/lists/:id" do
   end
 end
 
-post "/lists/:id/delete" do 
-  id = params[:id].to_i
+post "/lists/:list_id/delete" do 
+  id = params[:list_id].to_i
   session[:success] = "The list was deleted succesfully" if  session[:lists].delete_at(id) 
   redirect "/lists"
 end
 
-post "/lists/:id/todos" do 
+post "/lists/:list_id/todos" do 
   current_todo_name = params[:todo].strip
-  list_id = params[:id].to_i
+  list_id = params[:list_id].to_i
+  @list_id = params[:list_id]
   
   @list = session[:lists][list_id]
   @list_name = @list[:name]
@@ -119,4 +122,14 @@ post "/lists/:id/todos" do
     session[:success] = "The todo has been added succesfully"
     redirect "/lists/#{list_id}"
   end
+end
+
+post "/lists/:list_id/todos/:todo_id/delete" do 
+  @list_id = params[:list_id].to_i
+  @list = session[:lists][@list_id]
+  
+  todo_id = params[:todo_id].to_i
+  @list[:todos].delete_at(todo_id)
+  session[:success] = "The todo has been deleted"
+  redirect "/lists/#{@list_id}"
 end
