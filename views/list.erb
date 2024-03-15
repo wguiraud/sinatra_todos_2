@@ -9,6 +9,16 @@
   </header>
 </section>
 
+<section id="todos">
+    <ul> 
+      <% @list[:todos].each_with_index do |todo, idx| %>
+        <li> 
+          <p><%= todo[:name] %></p>
+        </li>
+      <% end %>
+    </ul>
+</section>
+
 <form action="/lists/<%= params[:id] %>/todos" method="post">
   <dl>
     <dt>

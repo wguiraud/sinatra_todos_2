@@ -32,7 +32,7 @@ end
 post "/lists" do 
   list_name = params[:list_name].strip #"sanitizing" the input string asap
 
-  error = error_for_name?(list_name)
+  error = error_for_listname?(list_name)
 
   if error  
     session[:error] = error 
@@ -44,16 +44,20 @@ post "/lists" do
   end
 end
 
-def error_for_name?(list_name)
-  return "List name must only include alphanumeric characters and must be between 1 and 50 characters long." if invalid_list_name?(list_name) 
-  return "List name must be unique" if already_used_list_name?(list_name)
+def error_for_listname?(list_name)
+  return "List name must only include alphanumeric characters and must be between 1 and 50 characters long." if invalid_name?(list_name) 
+  return "List name must be unique" if already_used_name?(list_name)
 end
 
-def invalid_list_name?(list_name) 
-  !list_name.match?(/^[\w ]{1,50}$/i) 
+def error_for_todoname?(todo_name)
+  return "Todo name must only include alphanumeric characters and must be between 1 and 50 characters long." if invalid_name?(todo_name) 
 end
 
-def already_used_list_name?(list_name)
+def invalid_name?(name) 
+  !name.match?(/^[\w ]{1,50}$/i) 
+end
+
+def already_used_name?(list_name)
   session[:lists].any? { |list| list[:name] == list_name }
 end
 
@@ -79,7 +83,7 @@ post "/lists/:id" do
   list_id = params[:id].to_i
   @list = session[:lists][list_id]
   
-  error = error_for_name?(current_list_name)
+  error = error_for_listname?(current_list_name)
 
   if error
     session[:error] = error
@@ -98,3 +102,21 @@ post "/lists/:id/delete" do
   redirect "/lists"
 end
 
+post "/lists/:id/todos" do 
+  current_todo_name = params[:todo].strip
+  list_id = params[:id].to_i
+  
+  @list = session[:lists][list_id]
+  @list_name = @list[:name]
+
+  error = error_for_todoname?(current_todo_name)
+
+  if error
+    session[:error] = error
+    erb :list
+  else
+    @list[:todos] << { name: params[:todo], completed: false }
+    session[:success] = "The todo has been added succesfully"
+    redirect "/lists/#{list_id}"
+  end
+end
