@@ -138,3 +138,10 @@ post "/lists/:list_id/todos/:todo_id/delete" do
   session[:success] = "The todo has been deleted"
   redirect "/lists/#{@list_id}"
 end
+
+# marka a Todo as completed
+post "/lists/:list_id/todos/:todo_id/completed" do 
+  "hello from the future route responsible for marking a todo as completed"
+
+end
+
