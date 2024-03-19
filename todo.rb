@@ -140,8 +140,16 @@ post "/lists/:list_id/todos/:todo_id/delete" do
 end
 
 # marka a Todo as completed
-post "/lists/:list_id/todos/:todo_id/completed" do 
-  "hello from the future route responsible for marking a todo as completed"
+post "/lists/:list_id/todos/:todo_id" do 
+  @list_id = params[:list_id].to_i
+  @list = session[:lists][@list_id]
 
+  todo_id = params[:todo_id].to_i
+
+  is_completed = params[:completed] == "true"
+  @list[:todos][todo_id][:completed] = is_completed
+
+  session[:success] = "The todo has been updated"
+  redirect "/lists/#{@list_id}"
 end
 
