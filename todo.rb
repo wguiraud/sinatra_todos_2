@@ -25,6 +25,23 @@ helpers do
   def todos_count(list)
     list[:todos].size
   end
+
+  def sort_list(list, &block)
+    completed_list, uncompleted_list = {}, {}
+
+    list.each_with_index do |list, idx|
+      if list_complete?(list)
+        completed_list[list] = idx
+      else
+        uncompleted_list[list] = idx
+      end
+    end
+
+#    uncompleted_list.each { |list, idx| yield(list, idx) } 
+#    completed_list.each { |list, idx| yield(list, idx) } 
+    uncompleted_list.each(&block) 
+    completed_list.each(&block)
+  end
 end
 
 before do 
