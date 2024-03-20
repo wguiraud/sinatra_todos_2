@@ -9,6 +9,12 @@ configure do
   set :session_secret, SecureRandom.hex(32)
 end
 
+helpers do 
+  def list_complete?(list)
+    list[:todos].all? { |td| td[:completed] } && list[:todos].size > 0 
+  end
+end
+
 before do 
   session[:lists] ||= []
 end
