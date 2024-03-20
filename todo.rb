@@ -26,7 +26,7 @@ helpers do
     list[:todos].size
   end
 
-  def sort_list(lists, &block)
+  def sort_lists(lists, &block)
     completed_list, uncompleted_list = lists.partition { |list| list_complete?(list) } 
 
     uncompleted_list.each { |list| yield list, lists.index(list) }
