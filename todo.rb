@@ -26,21 +26,18 @@ helpers do
     list[:todos].size
   end
 
-  def sort_list(list, &block)
-    completed_list, uncompleted_list = {}, {}
+  def sort_list(lists, &block)
+    completed_list, uncompleted_list = lists.partition { |list| list_complete?(list) } 
 
-    list.each_with_index do |list, idx|
-      if list_complete?(list)
-        completed_list[list] = idx
-      else
-        uncompleted_list[list] = idx
-      end
-    end
+    uncompleted_list.each { |list| yield list, lists.index(list) }
+    completed_list.each { |list| yield list, lists.index(list) }
+  end
 
-#    uncompleted_list.each { |list, idx| yield(list, idx) } 
-#    completed_list.each { |list, idx| yield(list, idx) } 
-    uncompleted_list.each(&block) 
-    completed_list.each(&block)
+  def sort_todos(todos, &block)
+    completed_todos, uncompleted_todos = todos.partition { |todo| todo[:completed] } 
+
+    uncompleted_todos.each { |todo| yield todo, todos.index(todo) }
+    completed_todos.each { |todo| yield todo, todos.index(todo) } 
   end
 end
 
