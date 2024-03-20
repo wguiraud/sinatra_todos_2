@@ -1,6 +1,11 @@
 <section id="todos">
   <header> 
-    <h2><%= @list_name %></h2>
+    <% if completed_list?(@list) %>
+      <h2 class="complete" ><%= @list_name %></h2>
+    <% else %> 
+      <h2><%= @list_name %></h2>
+    <% end %>
+      
     <ul> 
       <li> 
         <form action="/lists/<%= @list_id %>/complete_all" method="post">
