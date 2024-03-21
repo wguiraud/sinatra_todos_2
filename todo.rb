@@ -42,6 +42,14 @@ helpers do
   end
 end
 
+def load_list(index) 
+  list = session[:lists][index] if index && session[:lists][index]
+  return list if list
+
+  session[:error] = "The specified list was not found"
+  redirect "/lists"
+end
+
 before do 
   session[:lists] ||= []
 end
