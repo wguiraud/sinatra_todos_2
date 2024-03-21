@@ -119,7 +119,8 @@ get "/lists/:list_id/edit" do
   list_id = params[:list_id].to_i
   @list_id = params[:list_id]
 
-  @list = session[:lists][list_id]
+  #@list = session[:lists][list_id]
+  @list = load_list(list_id) 
   erb :edit_list
 end
 
@@ -127,7 +128,8 @@ end
 post "/lists/:list_id" do 
   current_list_name = params[:list_name].strip
   list_id = params[:list_id].to_i
-  @list = session[:lists][list_id]
+  #@list = session[:lists][list_id]
+  @list = load_list(list_id) 
   @list_id = params[:list_id]
   
   error = error_for_listname?(current_list_name)
@@ -155,7 +157,8 @@ post "/lists/:list_id/todos" do
   list_id = params[:list_id].to_i
   @list_id = params[:list_id]
   
-  @list = session[:lists][list_id]
+  #@list = session[:lists][list_id]
+  @list = load_list(list_id) 
   @list_name = @list[:name]
 
   error = error_for_todoname?(current_todo_name)
@@ -173,7 +176,8 @@ end
 # delete a Todo from the list
 post "/lists/:list_id/todos/:todo_id/delete" do 
   @list_id = params[:list_id].to_i
-  @list = session[:lists][@list_id]
+  #@list = session[:lists][@list_id]
+  @list = load_list(@list_id) 
   
   todo_id = params[:todo_id].to_i
   @list[:todos].delete_at(todo_id)
@@ -184,7 +188,8 @@ end
 # marka a Todo as completed
 post "/lists/:list_id/todos/:todo_id" do 
   @list_id = params[:list_id].to_i
-  @list = session[:lists][@list_id]
+  #@list = session[:lists][@list_id]
+  @list = load_list(@list_id) 
 
   todo_id = params[:todo_id].to_i
 
@@ -198,7 +203,8 @@ end
 # marking all the Todos of a single list as completed
 post "/lists/:list_id/complete_all" do 
   @list_id = params[:list_id].to_i
-  @list = session[:lists][@list_id]
+  #@list = session[:lists][@list_id]
+  @list = load_list(@list_id) 
 
   @list[:todos].each { |todo| todo[:completed] = true }
   session[:success] = "All the todos have been completed"
