@@ -107,7 +107,8 @@ get "/lists/:list_id" do
   list_id = params[:list_id].to_i
   @list_id = params[:list_id] 
   
-  @list = session[:lists][list_id]
+  #@list = session[:lists][list_id]
+  @list = load_list(list_id) 
   @list_name = session[:lists][list_id][:name] 
 
   erb :list
