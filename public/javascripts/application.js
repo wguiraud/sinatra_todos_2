@@ -1,6 +1,6 @@
 $(function() { 
   
-  $("form.delete").submit(function(even) { 
+  $("form.delete").submit(function(event) { 
     event.preventDefault();
     event.stopPropagation();
 
