@@ -1,2 +1,14 @@
-console.log("this is a test to see if the js code is running in the browser");
+$(function() { 
+  
+  $("form.delete").submit(function(even) { 
+    event.preventDefault();
+    event.stopPropagation();
 
+    var ok = confirm("Are you sure? this cannot be undone!"); 
+    if (ok) { 
+      this.submit();
+    }
+
+  });
+
+}); 
