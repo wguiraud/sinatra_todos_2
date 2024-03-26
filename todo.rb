@@ -145,6 +145,7 @@ post "/lists/:list_id" do
   end
 end
 
+#delete a list 
 post "/lists/:list_id/delete" do 
   id = params[:list_id].to_i
   session[:lists].delete_at(id) 
