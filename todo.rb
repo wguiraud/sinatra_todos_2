@@ -147,8 +147,13 @@ end
 
 post "/lists/:list_id/delete" do 
   id = params[:list_id].to_i
-  session[:success] = "The list was deleted succesfully" if  session[:lists].delete_at(id) 
-  redirect "/lists"
+  session[:lists].delete_at(id) 
+  if env["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest"
+    "/lists"
+  else
+    session[:success] = "The list was deleted succesfully" 
+    redirect "/lists"
+  end
 end
 
 # add a new Todo to the list

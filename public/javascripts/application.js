@@ -15,13 +15,13 @@ $(function() {
       });
 
       request.done(function(data, textStatus, jqXHR) { 
-        form.parent('li').remove()
+        if (jqXHR.status === 204) { 
+          form.parent("li").remove();
+        } else if (jqXHR.status === 200) { 
+          document.location = data;
+        }
       });
-
       //request.fail(function() {} })' in production env
-
     }
-
   });
-
 }); 
