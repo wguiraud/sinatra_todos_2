@@ -42,8 +42,8 @@ helpers do
   end
 end
 
-def load_list(index) 
-  list = session[:lists][index] if index && session[:lists][index]
+def load_list(list_id) 
+  list = session[:lists].find { |list| list[:list_id] == list_id } 
   return list if list
 
   session[:error] = "The specified list was not found"
@@ -69,6 +69,11 @@ end
 
 def next_todo_id(todos)
   max = todos.map { |todo| todo[:id] }.max || 0 
+  max + 1
+end
+
+def next_list_id(lists)
+  max = lists.map { |list| list[:list_id] }.max || 0 
   max + 1
 end
 
@@ -101,7 +106,8 @@ post "/lists" do
     session[:error] = error 
     erb :new_list
   else
-    session[:lists] << { name: list_name, todos: [] }
+    id = next_list_id(session[:lists])
+    session[:lists] << { list_id: id, name: list_name, todos: [] }
     session[:success] = "The new list has been created succesfully!"
     redirect "/lists"
   end
@@ -112,9 +118,8 @@ get "/lists/:list_id" do
   list_id = params[:list_id].to_i
   @list_id = params[:list_id] 
   
-  #@list = session[:lists][list_id]
   @list = load_list(list_id) 
-  @list_name = session[:lists][list_id][:name] 
+  @list_name = session[:lists].find { |list| list[:list_id] == list_id }[:name] 
 
   erb :list
 end
@@ -124,7 +129,6 @@ get "/lists/:list_id/edit" do
   list_id = params[:list_id].to_i
   @list_id = params[:list_id]
 
-  #@list = session[:lists][list_id]
   @list = load_list(list_id) 
   erb :edit_list
 end
@@ -133,7 +137,6 @@ end
 post "/lists/:list_id" do 
   current_list_name = params[:list_name].strip
   list_id = params[:list_id].to_i
-  #@list = session[:lists][list_id]
   @list = load_list(list_id) 
   @list_id = params[:list_id]
   
@@ -153,7 +156,7 @@ end
 #delete a list 
 post "/lists/:list_id/delete" do 
   id = params[:list_id].to_i
-  session[:lists].delete_at(id) 
+  session[:lists].reject! { |list| list[:list_id] == id } 
   if env["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest"
     "/lists"
   else
@@ -168,7 +171,6 @@ post "/lists/:list_id/todos" do
   list_id = params[:list_id].to_i
   @list_id = params[:list_id]
   
-  #@list = session[:lists][list_id]
   @list = load_list(list_id) 
   @list_name = @list[:name]
 
@@ -189,11 +191,9 @@ end
 # delete a Todo from the list
 post "/lists/:list_id/todos/:todo_id/delete" do 
   @list_id = params[:list_id].to_i
-  #@list = session[:lists][@list_id]
   @list = load_list(@list_id) 
   
   todo_id = params[:todo_id].to_i
-  #@list[:todos].delete_at(todo_id)
   @list[:todos].reject! { |todo| todo[:id] == todo_id }
 
   if env["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest"
@@ -207,15 +207,12 @@ end
 # mark a a Todo as completed
 post "/lists/:list_id/todos/:todo_id" do 
   @list_id = params[:list_id].to_i
-  #@list = session[:lists][@list_id]
   @list = load_list(@list_id) 
 
   todo_id = params[:todo_id].to_i
 
   is_completed = params[:completed] == "true"
-  #@list[:todos][todo_id][:completed] = is_completed
   selected_todo = @list[:todos].find { |todo| todo[:id] == todo_id }
-  #selected_todo.first[:completed] = is_completed
   selected_todo[:completed] = is_completed
 
   session[:success] = "The todo has been updated"
@@ -225,7 +222,6 @@ end
 # marking all the Todos of a single list as completed
 post "/lists/:list_id/complete_all" do 
   @list_id = params[:list_id].to_i
-  #@list = session[:lists][@list_id]
   @list = load_list(@list_id) 
 
   @list[:todos].each { |todo| todo[:completed] = true }
