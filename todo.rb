@@ -50,6 +50,28 @@ def load_list(index)
   redirect "/lists"
 end
 
+def error_for_listname?(list_name)
+  return "List name must only include alphanumeric characters and must be between 1 and 50 characters long." if invalid_name?(list_name) 
+  return "List name must be unique" if already_used_name?(list_name)
+end
+
+def error_for_todoname?(todo_name)
+  return "Todo name must only include alphanumeric characters and must be between 1 and 50 characters long." if invalid_name?(todo_name) 
+end
+
+def invalid_name?(name) 
+  !name.match?(/^[\w ]{1,50}$/i) 
+end
+
+def already_used_name?(list_name)
+  session[:lists].any? { |list| list[:name] == list_name }
+end
+
+def next_todo_id(todos)
+  max = todos.map { |todo| todo[:id] }.max || 0 
+  max + 1
+end
+
 before do 
   session[:lists] ||= []
 end
@@ -83,23 +105,6 @@ post "/lists" do
     session[:success] = "The new list has been created succesfully!"
     redirect "/lists"
   end
-end
-
-def error_for_listname?(list_name)
-  return "List name must only include alphanumeric characters and must be between 1 and 50 characters long." if invalid_name?(list_name) 
-  return "List name must be unique" if already_used_name?(list_name)
-end
-
-def error_for_todoname?(todo_name)
-  return "Todo name must only include alphanumeric characters and must be between 1 and 50 characters long." if invalid_name?(todo_name) 
-end
-
-def invalid_name?(name) 
-  !name.match?(/^[\w ]{1,50}$/i) 
-end
-
-def already_used_name?(list_name)
-  session[:lists].any? { |list| list[:name] == list_name }
 end
 
 # display a list 
@@ -155,11 +160,6 @@ post "/lists/:list_id/delete" do
     session[:success] = "The list was deleted succesfully" 
     redirect "/lists"
   end
-end
-
-def next_todo_id(todos)
-  max = todos.map { |todo| todo[:id] }.max || 0 
-  max + 1
 end
 
 # add a new Todo to the list
