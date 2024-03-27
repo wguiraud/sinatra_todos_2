@@ -204,7 +204,7 @@ post "/lists/:list_id/todos/:todo_id/delete" do
   end
 end
 
-# marka a Todo as completed
+# mark a a Todo as completed
 post "/lists/:list_id/todos/:todo_id" do 
   @list_id = params[:list_id].to_i
   #@list = session[:lists][@list_id]
@@ -213,7 +213,10 @@ post "/lists/:list_id/todos/:todo_id" do
   todo_id = params[:todo_id].to_i
 
   is_completed = params[:completed] == "true"
-  @list[:todos][todo_id][:completed] = is_completed
+  #@list[:todos][todo_id][:completed] = is_completed
+  selected_todo = @list[:todos].find { |todo| todo[:id] == todo_id }
+  #selected_todo.first[:completed] = is_completed
+  selected_todo[:completed] = is_completed
 
   session[:success] = "The todo has been updated"
   redirect "/lists/#{@list_id}"
