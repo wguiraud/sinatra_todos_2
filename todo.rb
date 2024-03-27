@@ -224,7 +224,12 @@ post "/lists/:list_id/complete_all" do
   @list_id = params[:list_id].to_i
   @list = load_list(@list_id) 
 
-  @list[:todos].each { |todo| todo[:completed] = true }
-  session[:success] = "All the todos have been completed"
-  redirect "/lists/#{@list_id}"
+  if @list[:todos].size > 0
+    @list[:todos].each { |todo| todo[:completed] = true }
+    session[:success] = "All the todos have been completed"
+    redirect "/lists/#{@list_id}"
+  else
+    session[:error] = "There isn't any todo in this list!"
+    redirect "/lists/#@list_id}"
+  end
 end
